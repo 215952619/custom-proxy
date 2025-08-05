@@ -19,6 +19,9 @@ RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
     echo 'exec nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
     chmod +x /docker-entrypoint.sh
 
+# 创建证书目录
+RUN mkdir -p /var/www/certbot
+
 # 暴露端口
 EXPOSE 80 443
 

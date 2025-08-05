@@ -3,8 +3,11 @@ version: '3.2'
 services:
   custom-proxy:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args:
+        PORT: 3000
+        TARGET: xyz.example.com
     container_name: custom-proxy-server
     environment:
       - TARGET=xyz.example.com

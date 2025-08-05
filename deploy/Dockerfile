@@ -4,29 +4,32 @@ FROM node:18-alpine
 # 设置工作目录
 WORKDIR /app
 
+# 设置构建参数和默认值
+ARG PORT=3000
+ARG TARGET=localhost
+ENV PORT=${PORT}
+ENV TARGET=${TARGET}
+
 # 创建环境变量到.env文件的脚本
 RUN echo 'PORT=${PORT}' > .env && \
     echo 'TARGET=${TARGET}' >> .env && \
     echo '.env文件已生成'
 
-# 复制源代码到工作目录
-COPY ../src ./src
+# 复制源代码到工作目录（修正路径）
+COPY src ./src
 
-# 复制package.json和pnpm-lock.yaml（如果存在）
-COPY ../package.json ./
-COPY ../pnpm-lock.yaml ./
+# 复制package.json和pnpm-lock.yaml
+COPY package.json ./
+COPY pnpm-lock.yaml ./
 
-# 安装pnpm（如果项目使用pnpm）
+# 安装pnpm
 RUN npm install -g pnpm
 
 # 安装依赖
 RUN pnpm install
 
-# 创建证书目录
-RUN mkdir -p /var/www/certbot
-
-# 暴露端口
+# 暴露端口（使用固定端口，运行时通过环境变量覆盖）
 EXPOSE ${PORT}
 
-# 启动脚本
-CMD ["/bin/sh", "-c", "npm start"]
+# 启动脚本：先生成.env文件，然后启动应用
+CMD ["/bin/sh", "-c", "pnpm start"]
