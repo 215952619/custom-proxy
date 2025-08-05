@@ -21,7 +21,7 @@ services:
   # 可选：添加Nginx作为负载均衡器
   nginx:
     build:
-      context: ./deploy
+      context: .
       dockerfile: Dockerfile.nginx
     container_name: custom-proxy-nginx
     environment:
