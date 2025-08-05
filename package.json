@@ -1,0 +1,24 @@
+{
+  "name": "custom-proxy",
+  "version": "1.0.0",
+  "description": "A simple HTTPS proxy server that forwards requests based on subdomain",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "proxy",
+    "reverse-proxy"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.1",
+    "nodemon": "^3.0.2"
+  }
+}
