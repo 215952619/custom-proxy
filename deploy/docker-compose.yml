@@ -23,9 +23,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.nginx
+      args:
+        PORT: 3000
+        TARGET: xyz.example.com
     container_name: custom-proxy-nginx
     environment:
       - TARGET=xyz.example.com
+      - PORT=3000
     ports:
       - "80:80"
       - "443:443"

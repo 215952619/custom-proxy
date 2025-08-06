@@ -13,7 +13,8 @@ COPY nginx/app.conf.template /etc/nginx/conf.d/app.conf.template
 RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
     echo 'echo "Processing app.conf.template with environment variables:"' >> /docker-entrypoint.sh && \
     echo 'echo "  TARGET=${TARGET}"' >> /docker-entrypoint.sh && \
-    echo 'envsubst < /etc/nginx/conf.d/app.conf.template > /etc/nginx/conf.d/app.conf' >> /docker-entrypoint.sh && \
+    echo 'echo "  PORT=${PORT}"' >> /docker-entrypoint.sh && \
+    echo "envsubst '\${PORT} \${TARGET}' < /etc/nginx/conf.d/app.conf.template > /etc/nginx/conf.d/app.conf" >> /docker-entrypoint.sh && \
     echo 'echo "Generated app.conf:"' >> /docker-entrypoint.sh && \
     echo 'cat /etc/nginx/conf.d/app.conf' >> /docker-entrypoint.sh && \
     echo 'exec nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
@@ -21,6 +22,12 @@ RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
 
 # 创建证书目录
 RUN mkdir -p /var/www/certbot
+
+# 设置构建参数和默认值
+ARG PORT=3000
+ARG TARGET=localhost
+ENV PORT=${PORT}
+ENV TARGET=${TARGET}
 
 # 暴露端口
 EXPOSE 80 443
