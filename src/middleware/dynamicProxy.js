@@ -11,9 +11,9 @@ module.exports = (req, res, next) => {
   if (!host) {
     return res.status(400).send('Bad Request: Missing Host header');
   }
-  
-  // 验证是否二级域名
-  if (checkHostName(host, targetDomain)) {
+
+  // 验证是否指定域名
+  if (!checkHostName(host, targetDomain)) {
     return res.status(400).send('Bad Request: Expected a subdomain');
   }
 
