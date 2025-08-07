@@ -13,12 +13,12 @@ module.exports = (req, res, next) => {
   }
 
   // 验证是否指定域名
-  if (!checkHostName(host, targetDomain)) {
+  if (!checkHostName(req.hostname, targetDomain)) {
     return res.status(400).send('Bad Request: Expected a subdomain');
   }
 
   // 提取子域名
-  const subdomain = getSubdomain(host);
+  const subdomain = getSubdomain(req.hostname);
   const targetUrl = proxyConfig[subdomain];
   if (!targetUrl) {
     return res.status(502).send('Bad Gateway: No target configured for this subdomain');
@@ -35,12 +35,12 @@ module.exports = (req, res, next) => {
       console.error('代理错误:', err.message);
       res.status(500).send('代理服务器错误');
     },
-    onProxyReq: (proxyReq, req, res) => {
-      console.log(`代理请求: ${req.method} ${req.url} -> ${targetUrl}`);
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      console.log(`代理响应: ${proxyRes.statusCode} ${req.url}`);
-    }
+    // onProxyReq: (proxyReq, req, res) => {
+    //   console.log(`代理请求: ${req.method} ${req.url} -> ${targetUrl}`);
+    // },
+    // onProxyRes: (proxyRes, req, res) => {
+    //   console.log(`代理响应: ${proxyRes.statusCode} ${req.url}`);
+    // }
   });
   
   proxy(req, res, next);
