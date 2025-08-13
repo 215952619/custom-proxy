@@ -1,5 +1,7 @@
 const express = require('express');
 
+require('events').EventEmitter.defaultMaxListeners = 100; // 增加默认监听器数量
+
 require('dotenv').config();
 
 // 中间件：解析子域名并代理请求

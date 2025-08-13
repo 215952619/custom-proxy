@@ -32,7 +32,6 @@ module.exports = (req, res, next) => {
     changeOrigin: true,
     ws: true, // 支持 WebSocket
     onError: (err, req, res) => {
-      console.error('代理错误:', err.message);
       res.status(500).send('代理服务器错误');
     },
     // onProxyReq: (proxyReq, req, res) => {
@@ -40,7 +39,11 @@ module.exports = (req, res, next) => {
     // },
     // onProxyRes: (proxyRes, req, res) => {
     //   console.log(`代理响应: ${proxyRes.statusCode} ${req.url}`);
-    // }
+    // },
+    // onProxyReqWs: (proxyReq, req, socket, options, head) => {
+    //   console.log(`WebSocket 代理请求: ${req.method} ${req.url} -> ${targetUrl}`);
+    //   // 这里可以添加额外的 WebSocket 请求处理逻辑
+    // },
   });
   
   proxy(req, res, next);

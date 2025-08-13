@@ -42,3 +42,4 @@ services:
 networks:
   proxy-network:
     driver: bridge
+    enable_ipv6: true  # 开通ipv6支持

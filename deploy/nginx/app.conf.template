@@ -1,5 +1,6 @@
 underscores_in_headers on;
-client_max_body_size 10M;
+# client_max_body_size 10M; # 大小检查
+client_max_body_size 0; # 不限制大小
 
 client_header_buffer_size 512k;
 large_client_header_buffers 4 512k;
@@ -13,17 +14,38 @@ gzip_types       text/plain application/x-javascript text/css application/xml te
 gzip_disable "MSIE [1-6]\.";
 gzip_vary on;
 
+# 自动检测协议升级
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''            close;
+}
+
 server {
-  listen 80;
+  listen 80; # 监听 IPv4
+  listen [::]:80; # 监听 IPv6
   server_name ${TARGET} *.${TARGET};
 
   location / {
     proxy_pass http://custom-proxy:${PORT}/;
+
     proxy_redirect default;
     proxy_set_header Host $host; # 传递域名
     proxy_set_header X-Real-IP $remote_addr; # 传递ip
     proxy_set_header X-Scheme $scheme; # 传递协议
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    # WebSocket 必需头部
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    
+    proxy_read_timeout 86400s;
+
+    # 缓冲区优化
+    proxy_buffering off;
+
+    # 透传所有客户端原始 headers (慎用!)
+    proxy_pass_request_headers on;
   }
 
   location /.well-known/acme-challenge/ {
